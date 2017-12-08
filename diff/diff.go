@@ -55,18 +55,15 @@ func readFile(file string) [][]byte {
 	if RErr != nil {
 		lg.Fatalln(RErr)
 	}
-	fileBytes := bytes.Split(fileContent, []byte("\r\n"))
+	fileBytes := bytes.Split(fileContent, []byte("\r\n")) // windows
+	// fileBytes := bytes.Split(fileContent, []byte{'\n'})   // linux
 	return fileBytes
 }
 
-// var theSame map[int][]int
-
 func InitGraph(src string, dst string) [][]*point {
 	srcBytes := readFile(src)
-	fmt.Println(srcBytes)
 	srcBLen := len(srcBytes)
 	dstBytes := readFile(dst)
-	fmt.Println(dstBytes)
 	dstBLen := len(dstBytes)
 	theSame := make(map[int][]int)
 	graph := make([][]*point, 0, (srcBLen + 1))
@@ -80,18 +77,15 @@ func InitGraph(src string, dst string) [][]*point {
 	}
 	for i, srcB := range srcBytes {
 		dstBList := []int{}
-		// fmt.Printf("%d,%v\n", i, srcB)
 		for j, dstB := range dstBytes {
-			// fmt.Printf("%d,%v\n", j, dstB)
 			if bytes.Equal(srcB, dstB) {
 				dstBList = append(dstBList, j)
 			}
 		}
-		// if len(dstBList) != 0 {
-		theSame[i] = dstBList
-		// }
+		if len(dstBList) != 0 {
+			theSame[i] = dstBList
+		}
 	}
-	fmt.Println(theSame)
 	for i, srcX := range graph {
 		for j, _ := range srcX {
 			if i < srcBLen {
@@ -103,7 +97,6 @@ func InitGraph(src string, dst string) [][]*point {
 			if v, ok := theSame[i]; ok {
 				for _, vv := range v {
 					if j == vv {
-						fmt.Printf("%d,%d\n", i, j)
 						graph[i][j].children = append(graph[i][j].children, graph[i+1][j+1])
 						break
 					}
@@ -113,57 +106,6 @@ func InitGraph(src string, dst string) [][]*point {
 	}
 	return graph
 }
-
-// func InitGraph(src string, dst string) [][]*point {
-// 	srcBytes := readFile(src)
-// 	srcBLen := len(srcBytes)
-// 	dstBytes := readFile(dst)
-// 	dstBLen := len(dstBytes)
-// 	theSame := make(map[int][]int)
-// 	graph := make([][]*point, 0, (srcBLen + 1))
-// 	for i, srcB := range srcBytes {
-// 		dstBList := []int{}
-// 		graphY := make([]*point, 0, (dstBLen + 1))
-// 		for j, dstB := range dstBytes {
-// 			p := initPoint(i, j)
-// 			graphY = append(graphY, p)
-// 			// if srcB == dstB {
-// 			if bytes.Equal(srcB, dstB) {
-// 				dstBList = append(dstBList, j)
-// 			}
-// 		}
-//		// p := initPoint(i, dstBLen+1)
-//		// graphY = append(graphY, p)
-// 		graph = append(graph, graphY)
-// 		if len(dstBList) != 0 {
-// 			theSame[i] = dstBList
-// 		}
-// 	}
-// 	for i, srcX := range graph {
-// 		for j, _ := range srcX {
-// 			if i < (srcBLen - 1) {
-// 				graph[i][j].children = append(graph[i][j].children, graph[i+1][j])
-// 			}
-// 			if j < (dstBLen - 1) {
-// 				graph[i][j].children = append(graph[i][j].children, graph[i][j+1])
-// 			}
-// 			if v, ok := theSame[i]; ok {
-// 				for _, vv := range v {
-// 					if j == vv {
-// 						graph[i][j].children = append(graph[i][j].children, graph[i+1][j+1])
-// 						break
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return graph
-// }
-
-// For test in main
-// func ReadFile(file string) [][]byte {
-// 	return readFile(file)
-// }
 
 func Diff() {
 	fmt.Println("Test.")

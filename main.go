@@ -12,7 +12,7 @@ func main() {
 	// a := diff.ReadFile(srcFile)
 	// fmt.Println(a)
 	graph := diff.InitGraph(srcFile, dstFile)
-	fmt.Println()
+	// fmt.Println()
 	for _, val := range graph {
 		for _, val2 := range val {
 			fmt.Println(val2)
