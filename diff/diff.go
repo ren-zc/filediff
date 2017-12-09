@@ -6,14 +6,11 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	// "sync"
 )
 
 var srcFile = "SrcFile"
 var dstFile = "DstFile"
 var lg *log.Logger
-
-// var wg sync.WaitGroup
 
 var srcBytes [][]byte
 var srcBLen int
@@ -39,49 +36,35 @@ type point struct {
 }
 
 func (p *point) getBestPath() {
-	// fmt.Println()
-	// fmt.Println(p)
 	if p.x == srcBLen && p.y == dstBLen {
 		p.distance = 0
 		close(p.ready)
 		return
-		// return p
 	}
 	childNum := len(p.children)
 	if childNum == 0 {
 		lg.Fatalf("Point (x:%d,y:%d) childern number is 0, please check", p.x, p.y)
 	}
-	// fmt.Println(p.children)
 	p.bestChild = minDistance(p.children)
 	p.distance = p.bestChild.distance + 1
 	close(p.ready)
-	// return nil
 }
 
 func minDistance(pts []*point) *point {
-	// fmt.Println(len(pts))
 	var min *point
-	// fmt.Println("1")
 	if _, ok := <-pts[0].ready; !ok {
-		// fmt.Println("in")
 		min = pts[0]
-		// fmt.Println(min)
 	}
-	// fmt.Println("2")
-	for i, v := range pts {
-		if i == 0 {
-			continue
-		}
+	for _, v := range pts[1:] {
+		// if i == 0 {
+		// 	continue
+		// }
 		if _, ok := <-v.ready; !ok {
-			// fmt.Println("ok")
-			// fmt.Printf("%d,%v,%v\n", i, v, min)
-			// fmt.Printf("%d,%d\n", v.distance, min.distance)
 			if v.distance < min.distance {
 				min = v
 			}
 		}
 	}
-	// fmt.Println(min)
 	return min
 }
 
@@ -151,7 +134,6 @@ func InitGraph() [][]*point {
 				for _, vv := range v {
 					if j == vv {
 						graph[i][j].children = append(graph[i][j].children, graph[i+1][j+1])
-						// fmt.Println(graph[i+1][j+1])
 						break
 					}
 				}
@@ -162,24 +144,53 @@ func InitGraph() [][]*point {
 }
 
 func Diff() {
-	// fmt.Println("Test.")
+	result := make([][]byte, 0, (srcBLen + dstBLen + 1))
+	result = append(result, []byte("@@@ S: src, D: dst. @@@"))
 	graph := InitGraph()
-	for _, vx := range graph {
-		for _, vy := range vx {
-			// fmt.Println(vy)
-			go vy.getBestPath()
+	for _, pl := range graph {
+		for _, p := range pl {
+			go p.getBestPath()
+		}
+	}
+	pList := make([]*point, 0, (srcBLen + dstBLen + 1))
+	var printPoint func(p *point)
+	printPoint = func(p *point) {
+		pList = append(pList, p)
+		if p.bestChild == nil {
+			return
+		} else {
+			printPoint(p.bestChild)
 		}
 	}
 	if _, ok := <-graph[0][0].ready; !ok {
 		printPoint(graph[0][0])
 	}
-}
-
-func printPoint(p *point) {
-	fmt.Println(p)
-	if p.bestChild == nil {
-		return
-	} else {
-		printPoint(p.bestChild)
+	growResult := func(sr string, i int, byteList [][]byte) {
+		s := fmt.Sprintf("%s %d ", sr, i+1)
+		b := []byte(s)
+		for _, bt := range byteList[i] {
+			b = append(b, bt)
+		}
+		result = append(result, b)
+	}
+	tmp := pList[0]
+	for _, p := range pList[1:] {
+		dx := p.x - tmp.x
+		dy := p.y - tmp.y
+		if dy == 0 {
+			growResult("- S", tmp.x, srcBytes)
+			tmp = p
+			continue
+		}
+		if dx == 0 {
+			growResult("+ D", tmp.y, dstBytes)
+			tmp = p
+			continue
+		}
+		growResult("  D", tmp.y, dstBytes)
+		tmp = p
+	}
+	for _, byList := range result {
+		fmt.Printf("%s\n", byList)
 	}
 }
