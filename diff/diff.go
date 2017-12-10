@@ -60,7 +60,7 @@ func readFile(file string) ([][]byte, error) {
 	if runtime.GOOS == "windows" {
 		fileBytes = bytes.Split(fileContent, []byte("\r\n")) // windows
 	} else {
-		fileBytes = bytes.Split(fileContent, []byte{'\n'}) // linux or others
+		fileBytes = bytes.Split(fileContent, []byte{'\n'}) // linux and others
 	}
 	return fileBytes, nil
 }
