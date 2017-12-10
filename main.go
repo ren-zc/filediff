@@ -1,3 +1,4 @@
+// diff package usage example.
 package main
 
 import (
