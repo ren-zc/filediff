@@ -1,3 +1,7 @@
+// By jacenr
+// Dec 10 2017
+// Call Diff() to get the result.
+
 package diff
 
 import (
@@ -32,6 +36,7 @@ func (p *point) String() string {
 	return fmt.Sprintf("%d,%d", p.x, p.y) + "\t" + s
 }
 
+// Create a point.
 func initPoint(x int, y int) *point {
 	p := new(point)
 	children := make([]*point, 0, 3)
@@ -45,6 +50,7 @@ func initPoint(x int, y int) *point {
 	return p
 }
 
+// Read file contents.
 func readFile(file string) ([][]byte, error) {
 	fileContent, RErr := ioutil.ReadFile(file)
 	if RErr != nil {
@@ -59,6 +65,7 @@ func readFile(file string) ([][]byte, error) {
 	return fileBytes, nil
 }
 
+// Initialize the global variables.
 func initData() error {
 	var readErr error
 	srcBytes, readErr = readFile(srcFile)
@@ -74,6 +81,7 @@ func initData() error {
 	return nil
 }
 
+// Get the point who has the minimum distance from the last point.
 func minDistance(pts []*point) *point {
 	var min *point
 	if _, ok := <-pts[0].ready; !ok {
@@ -89,6 +97,8 @@ func minDistance(pts []*point) *point {
 	return min
 }
 
+// Get the best child, set the distance from the last point.
+// Close channal to broadcast it's ready.
 func (p *point) getBestPath() {
 	if p.x == srcBLen && p.y == dstBLen {
 		p.distance = 0
@@ -100,6 +110,7 @@ func (p *point) getBestPath() {
 	close(p.ready)
 }
 
+// Create a weighted Directed Graph.
 func initGraph() [][]*point {
 	theSame := make(map[int][]int)
 	graph := make([][]*point, 0, (srcBLen + 1))
@@ -143,6 +154,8 @@ func initGraph() [][]*point {
 	return graph
 }
 
+// The interface function of this package.
+// It return the difference of dst and src.
 func Diff(dst string, src string) ([][]byte, error) {
 	dstFile = dst
 	srcFile = src
