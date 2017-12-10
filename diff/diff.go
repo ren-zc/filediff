@@ -4,14 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
-	"os"
 )
 
 var srcFile string
 var dstFile string
-var lg *log.Logger
-
 var srcBytes [][]byte
 var srcBLen int
 var dstBytes [][]byte
@@ -44,7 +40,7 @@ func initPoint(x int, y int) *point {
 	p.children = children
 	p.ready = ready
 	p.bestChild = nil
-	p.distance = int(-1)
+	p.distance = -1
 	return p
 }
 
@@ -59,7 +55,6 @@ func readFile(file string) ([][]byte, error) {
 }
 
 func initData() error {
-	lg = log.New(os.Stdout, "diff ", log.Lshortfile)
 	var readErr error
 	srcBytes, readErr = readFile(srcFile)
 	if readErr != nil {
@@ -94,10 +89,6 @@ func (p *point) getBestPath() {
 		p.distance = 0
 		close(p.ready)
 		return
-	}
-	childNum := len(p.children)
-	if childNum == 0 {
-		lg.Fatalf("Point (x:%d,y:%d) childern number is 0, please check", p.x, p.y)
 	}
 	p.bestChild = minDistance(p.children)
 	p.distance = p.bestChild.distance + 1
@@ -155,7 +146,7 @@ func Diff(dst string, src string) ([][]byte, error) {
 		return nil, initErr
 	}
 	result := make([][]byte, 0, (srcBLen + dstBLen + 1))
-	// result = append(result, []byte("@@@ S: src, D: dst. @@@"))
+	// result = append(result, []byte("@@@ S: src, D: dst. @@@")) // Output head.
 	graph := initGraph()
 	for _, pl := range graph {
 		for _, p := range pl {
