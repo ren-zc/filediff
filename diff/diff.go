@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"runtime"
 )
 
 var srcFile string
@@ -49,8 +50,12 @@ func readFile(file string) ([][]byte, error) {
 	if RErr != nil {
 		return nil, RErr
 	}
-	fileBytes := bytes.Split(fileContent, []byte("\r\n")) // windows
-	// fileBytes := bytes.Split(fileContent, []byte{'\n'})   // linux
+	var fileBytes [][]byte
+	if runtime.GOOS == "windows" {
+		fileBytes = bytes.Split(fileContent, []byte("\r\n")) // windows
+	} else {
+		fileBytes = bytes.Split(fileContent, []byte{'\n'}) // linux or others
+	}
 	return fileBytes, nil
 }
 
