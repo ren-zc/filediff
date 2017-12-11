@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	var srcFile = "SrcFile"
-	var dstFile = "DstFile"
+	var srcFile = "testFile/SrcFile"
+	var dstFile = "testFile/DstFile"
 	result, diffErr := diff.Diff(dstFile, srcFile)
 	if diffErr != nil {
 		fmt.Println(diffErr)
