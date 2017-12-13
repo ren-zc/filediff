@@ -6,6 +6,7 @@ import (
 	// "os"
 	"bytes"
 	"runtime"
+	"strconv"
 )
 
 var srcFile [][]byte
@@ -45,9 +46,24 @@ func newpoint(x int, y int) *point {
 // }
 
 var path map[*point][]*point
+var newed map[string]*point
 
 func init() {
 	path = map[*point][]*point{}
+	newed = map[string]*point{}
+}
+
+func checkNew(x, y int) *point {
+	var p *point
+	xyStr := strconv.Itoa(x) + strconv.Itoa(y)
+	v, ok := newed[xyStr]
+	if !ok {
+		p = newpoint(x, y)
+		newed[xyStr] = p
+	} else {
+		p = v
+	}
+	return p
 }
 
 func scanPath(p *point) []*point {
@@ -55,23 +71,16 @@ func scanPath(p *point) []*point {
 	xlimit := srcLen
 	ylimit := dstLen
 	for x, y := p.x+1, p.y+1; x < xlimit && y < ylimit; x, y = x+1, y+1 {
-		// fmt.Printf("%d,%d\t", xlimit, ylimit)
-		// fmt.Printf("%v\t", newpoint(p.x-1, p.y-1))
 		if bytes.Equal(srcFile[x], dstFile[y]) {
-			pn := newpoint(x, y)
+			pn := checkNew(x, y)
 			shortPath = append(shortPath, pn)
-			// fmt.Printf("%v ", pn)
-			// shortPath[p] = pchild
 			return shortPath
 		}
 		for i := x + 1; i < xlimit; i++ {
 			if bytes.Equal(srcFile[i], dstFile[y]) {
 				xlimit = i
-				pi := newpoint(i, y)
-				// fmt.Printf("%v\t", newpoint(p.x-1, p.y-1))
-				// fmt.Printf("%v ", pi)
-				// fmt.Printf("%d,%d ", xlimit, ylimit)
-				// fmt.Printf("i:%d y:%d\n", i, y)
+				// pi := newpoint(i, y)
+				pi := checkNew(i, y)
 				shortPath = append(shortPath, pi)
 				break
 			}
@@ -79,34 +88,28 @@ func scanPath(p *point) []*point {
 		for j := y + 1; j < ylimit; j++ {
 			if bytes.Equal(dstFile[j], srcFile[x]) {
 				ylimit = j
-				pj := newpoint(x, j)
-				// fmt.Printf("%v\t", newpoint(p.x-1, p.y-1))
-				// fmt.Printf("%v ", pj)
-				// fmt.Printf("%d,%d ", xlimit, ylimit)
-				// fmt.Printf("x:%d j:%d\n", x, j)
+				// pj := newpoint(x, j)
+				pj := checkNew(x, j)
 				shortPath = append(shortPath, pj)
 				break
 			}
 		}
-		// fmt.Println()
 	}
 	return shortPath
 }
 
-func getPath(p *point) map[*point][]*point {
-	// path :=
-
+func getPath(p *point) {
+	if _, ok := path[p]; ok {
+		return
+	}
 	ps := scanPath(p)
-	// pp := newpoint(p.x-1, p.y-1)
 	if len(ps) == 0 {
-		return nil
+		return
 	}
 	path[p] = ps
 	for _, pn := range ps {
-		// pm := newpoint(pn.x+1, pn.y+1)
 		getPath(pn)
 	}
-	return path
 }
 
 func readFile(file string) ([][]byte, error) {
@@ -123,6 +126,10 @@ func readFile(file string) ([][]byte, error) {
 	return fileBytes, nil
 }
 
+func getMostShortPath() []*path {
+
+}
+
 func Diff(src string, dst string) {
 	srcFile, _ = readFile(src)
 	dstFile, _ = readFile(dst)
@@ -130,11 +137,7 @@ func Diff(src string, dst string) {
 	dstLen = len(dstFile)
 	p0 := newpoint(-1, -1)
 	getPath(p0)
-	// fmt.Println(path)
 	for k, v := range path {
 		fmt.Printf("%v\t%v\n", k, v)
 	}
 }
-
-// here
-// redo 去重
