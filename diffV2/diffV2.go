@@ -31,20 +31,6 @@ func newpoint(x int, y int) *point {
 	return p
 }
 
-// func scanGraph(slen int, dlen int) []*point {
-// 	theSame := make([]*point, 0, 100)
-// 	p = new(0, 0)
-// 	theSame = append(theSame, p)
-// 	for x := 0; x < slen; x++ {
-// 		for y := 0; y < dlen; y++ {
-// 			if srcFile[x] == dstFile[y] {
-// 				p = new(x, y)
-// 				theSame = append(theSame, p)
-// 			}
-// 		}
-// 	}
-// }
-
 var path map[*point][]*point
 var newed map[string]*point
 
@@ -54,16 +40,15 @@ func init() {
 }
 
 func checkNew(x, y int) *point {
-	var p *point
 	xyStr := strconv.Itoa(x) + strconv.Itoa(y)
 	v, ok := newed[xyStr]
 	if !ok {
-		p = newpoint(x, y)
+		p := newpoint(x, y)
 		newed[xyStr] = p
+		return p
 	} else {
-		p = v
+		return v
 	}
-	return p
 }
 
 func scanPath(p *point) []*point {
@@ -126,8 +111,24 @@ func readFile(file string) ([][]byte, error) {
 	return fileBytes, nil
 }
 
-func getMostShortPath() []*path {
-
+func getMostDepth(p *point) []*point {
+	children, ok := path[p]
+	if !ok {
+		pl := []*point{}
+		pl = append(pl, p)
+		return pl
+	}
+	depth := 0
+	var pl []*point
+	for _, v := range children {
+		plv := getMostDepth(v)
+		if length := len(plv); length > depth {
+			depth = length
+			pl = plv
+		}
+	}
+	pl = append(pl, p)
+	return pl
 }
 
 func Diff(src string, dst string) {
@@ -140,4 +141,6 @@ func Diff(src string, dst string) {
 	for k, v := range path {
 		fmt.Printf("%v\t%v\n", k, v)
 	}
+	pathPoint := getMostDepth(p0)
+	fmt.Println(pathPoint)
 }
