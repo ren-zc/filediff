@@ -37,7 +37,7 @@ func newpoint(x int, y int) *point {
 	return p
 }
 
-// Check the point whether is exist.
+// Check the point whether has been created.
 func checkNew(x, y int) *point {
 	xyStr := strconv.Itoa(x) + strconv.Itoa(y)
 	v, ok := newed[xyStr]
@@ -169,7 +169,7 @@ func Diff(src string, dst string) ([]string, error) {
 	}
 	for i := len(pathPoint) - 2; i >= 0; i-- {
 		getResult(pOne, pathPoint[i])
-		str = fmt.Sprintf("  %s", srcFile[pathPoint[i].x])
+		str = fmt.Sprintf("  %s", srcFile[pathPoint[i].x]) // dstFile[pathPoint[i].y] == srcFile[pathPoint[i].x]
 		result = append(result, str)
 		pOne = newpoint(pathPoint[i].x+1, pathPoint[i].y+1)
 	}
