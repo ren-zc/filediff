@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	diffV2.Diff("testFile/SrcFile", "testFile/DstFile")
+	diffV2.Diff("testFile/SrcFile6", "testFile/DstFile6")
 }

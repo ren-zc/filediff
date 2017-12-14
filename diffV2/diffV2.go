@@ -1,10 +1,9 @@
 package diffV2
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
-	// "os"
-	"bytes"
 	"runtime"
 	"strconv"
 )
@@ -136,11 +135,37 @@ func Diff(src string, dst string) {
 	dstFile, _ = readFile(dst)
 	srcLen = len(srcFile)
 	dstLen = len(dstFile)
-	p0 := newpoint(-1, -1)
-	getPath(p0)
-	for k, v := range path {
-		fmt.Printf("%v\t%v\n", k, v)
+	pTmp := newpoint(-1, -1)
+	getPath(pTmp)
+	// for k, v := range path {
+	// 	fmt.Printf("%v\t%v\n", k, v)
+	// }
+	pathPoint := getMostDepth(pTmp)
+	// fmt.Println(pathPoint)
+
+	result := []string{}
+	var str string
+	pOne := newpoint(0, 0)
+	getResult := func(pOne, pPoint *point) {
+		for j := pOne.x; j < pPoint.x; j++ {
+			str = fmt.Sprintf("- %s", srcFile[j])
+			result = append(result, str)
+		}
+		for j := pOne.y; j < pPoint.y; j++ {
+			str = fmt.Sprintf("+ %s", dstFile[j])
+			result = append(result, str)
+		}
 	}
-	pathPoint := getMostDepth(p0)
-	fmt.Println(pathPoint)
+	for i := len(pathPoint) - 2; i >= 0; i-- {
+		getResult(pOne, pathPoint[i])
+		str = fmt.Sprintf("  %s", srcFile[pathPoint[i].x])
+		result = append(result, str)
+		pOne = newpoint(pathPoint[i].x+1, pathPoint[i].y+1)
+	}
+	pEnd := newpoint(srcLen, dstLen)
+	getResult(pOne, pEnd)
+
+	for _, line := range result {
+		fmt.Printf("%s\n", line)
+	}
 }
