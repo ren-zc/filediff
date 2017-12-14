@@ -1,10 +1,9 @@
-/*
- * By jacenr
- * Create: 2017-12-10
- * Usage:
- *       import "github.com/jacenr/filediff/diff"
- *       result, _ := diff.Diff("file1", "file2")
- */
+// By jacenr
+// Create: 2017-12-10
+// Usage:
+//       import "github.com/jacenr/filediff/diff"
+//       result, _ := diff.Diff("file1", "file2")
+
 package diff
 
 import (
@@ -148,11 +147,11 @@ func Diff(src string, dst string) ([]string, error) {
 	dstLen = len(dstFile)
 	pTmp := newpoint(-1, -1)
 	getPath(pTmp)
-	// for k, v := range path {			**
-	// 	fmt.Printf("%v\t%v\n", k, v)	** FOR CHECK
-	// }								**
+	// for k, v := range path {    // ** FOR CHECK **
+	// 	fmt.Printf("%v\t%v\n", k, v)
+	// }
 	pathPoint := getMostDepth(pTmp)
-	// fmt.Println(pathPoint)			** FOR CHECK
+	// fmt.Println(pathPoint)    // ** FOR CHECK **
 
 	// output
 	result := []string{}
