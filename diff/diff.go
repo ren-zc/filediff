@@ -1,213 +1,180 @@
 // By jacenr
-// Dec 10 2017
-// Call Diff() to get the result.
-
+// Create: 2017-12-10
+/*
+ * Usage:
+ * import "github.com/jacenr/filediff/diff"
+ * result, _ := diff.Diff("file1", "file2")
+ */
 package diff
 
 import (
-	"bytes"
+	"bufio"
 	"fmt"
-	"io/ioutil"
-	"runtime"
+	"os"
+	"strconv"
 )
 
-var srcFile string
-var dstFile string
-var srcBytes [][]byte
-var srcBLen int
-var dstBytes [][]byte
-var dstBLen int
+var srcFile []string
+var dstFile []string
+var srcLen int
+var dstLen int
+var path = map[*point][]*point{}
+var newed = map[string]*point{}
 
-// src X, dst Y
+// src:x, dst: y
 type point struct {
-	x         int
-	y         int
-	children  []*point
-	ready     chan struct{}
-	bestChild *point
-	distance  int
+	x int
+	y int
 }
 
 func (p *point) String() string {
-	var s string
-	for _, v := range p.children {
-		s += fmt.Sprintf(" %d,%d", v.x, v.y)
-	}
-	return fmt.Sprintf("%d,%d", p.x, p.y) + "\t" + s
+	return fmt.Sprintf("%d,%d", p.x, p.y)
 }
 
-// Create a point.
-func initPoint(x int, y int) *point {
+func newpoint(x int, y int) *point {
 	p := new(point)
-	children := make([]*point, 0, 3)
-	ready := make(chan struct{})
 	p.x = x
 	p.y = y
-	p.children = children
-	p.ready = ready
-	p.bestChild = nil
-	p.distance = -1
 	return p
 }
 
-// Read file contents.
-func readFile(file string) ([][]byte, error) {
-	fileContent, RErr := ioutil.ReadFile(file)
-	if RErr != nil {
-		return nil, RErr
-	}
-	var fileBytes [][]byte
-	if runtime.GOOS == "windows" {
-		fileBytes = bytes.Split(fileContent, []byte("\r\n")) // windows
+// Check the point whether is exist.
+func checkNew(x, y int) *point {
+	xyStr := strconv.Itoa(x) + strconv.Itoa(y)
+	v, ok := newed[xyStr]
+	if !ok {
+		p := newpoint(x, y)
+		newed[xyStr] = p
+		return p
 	} else {
-		fileBytes = bytes.Split(fileContent, []byte{'\n'}) // linux and others
+		return v
 	}
-	return fileBytes, nil
 }
 
-// Initialize the global variables.
-func initData() error {
-	var readErr error
-	srcBytes, readErr = readFile(srcFile)
-	if readErr != nil {
-		return readErr
-	}
-	srcBLen = len(srcBytes)
-	dstBytes, readErr = readFile(dstFile)
-	if readErr != nil {
-		return readErr
-	}
-	dstBLen = len(dstBytes)
-	return nil
-}
-
-// Get the point who has the minimum distance from the last point.
-func minDistance(pts []*point) *point {
-	var min *point
-	if _, ok := <-pts[0].ready; !ok {
-		min = pts[0]
-	}
-	for _, v := range pts[1:] {
-		if _, ok := <-v.ready; !ok {
-			if v.distance < min.distance {
-				min = v
+// Get all shortcut paths of a point.
+func scanPath(p *point) []*point {
+	shortPath := []*point{}
+	xlimit := srcLen
+	ylimit := dstLen
+	for x, y := p.x+1, p.y+1; x < xlimit && y < ylimit; x, y = x+1, y+1 {
+		if srcFile[x] == dstFile[y] {
+			pn := checkNew(x, y)
+			shortPath = append(shortPath, pn)
+			return shortPath
+		}
+		for i := x + 1; i < xlimit; i++ {
+			if srcFile[i] == dstFile[y] {
+				xlimit = i
+				pi := checkNew(i, y)
+				shortPath = append(shortPath, pi)
+				break
+			}
+		}
+		for j := y + 1; j < ylimit; j++ {
+			if srcFile[x] == dstFile[j] {
+				ylimit = j
+				pj := checkNew(x, j)
+				shortPath = append(shortPath, pj)
+				break
 			}
 		}
 	}
-	return min
+	return shortPath
 }
 
-// Get the best child, set the distance from the last point.
-// Close channal to broadcast it's ready.
-func (p *point) getBestPath() {
-	if p.x == srcBLen && p.y == dstBLen {
-		p.distance = 0
-		close(p.ready)
+// Put all shortcut paths into a map.
+func getPath(p *point) {
+	if _, ok := path[p]; ok {
 		return
 	}
-	p.bestChild = minDistance(p.children)
-	p.distance = p.bestChild.distance + 1
-	close(p.ready)
+	ps := scanPath(p)
+	if len(ps) == 0 {
+		return
+	}
+	path[p] = ps
+	for _, pn := range ps {
+		getPath(pn)
+	}
 }
 
-// Create a weighted Directed Graph.
-func initGraph() [][]*point {
-	theSame := make(map[int][]int)
-	graph := make([][]*point, 0, (srcBLen + 1))
-	for i := 0; i <= srcBLen; i++ {
-		graphY := make([]*point, 0, (dstBLen + 1))
-		for j := 0; j <= dstBLen; j++ {
-			p := initPoint(i, j)
-			graphY = append(graphY, p)
-		}
-		graph = append(graph, graphY)
+// Get the best path.
+func getMostDepth(p *point) []*point {
+	children, ok := path[p]
+	if !ok {
+		pl := []*point{}
+		pl = append(pl, p)
+		return pl
 	}
-	for i, srcB := range srcBytes {
-		dstBList := []int{}
-		for j, dstB := range dstBytes {
-			if bytes.Equal(srcB, dstB) {
-				dstBList = append(dstBList, j)
-			}
-		}
-		if len(dstBList) != 0 {
-			theSame[i] = dstBList
+	depth := 0
+	var pl []*point
+	for _, v := range children {
+		plv := getMostDepth(v)
+		if length := len(plv); length > depth {
+			depth = length
+			pl = plv
 		}
 	}
-	for i, srcX := range graph {
-		for j, _ := range srcX {
-			if i < srcBLen {
-				graph[i][j].children = append(graph[i][j].children, graph[i+1][j])
-			}
-			if j < dstBLen {
-				graph[i][j].children = append(graph[i][j].children, graph[i][j+1])
-			}
-			if v, ok := theSame[i]; ok {
-				for _, vv := range v {
-					if j == vv {
-						graph[i][j].children = append(graph[i][j].children, graph[i+1][j+1])
-						break
-					}
-				}
-			}
-		}
-	}
-	return graph
+	pl = append(pl, p)
+	return pl
 }
 
-// The interface function of this package.
-// It return the difference of dst and src.
-func Diff(dst string, src string) ([][]byte, error) {
-	dstFile = dst
-	srcFile = src
-	initErr := initData()
-	if initErr != nil {
-		return nil, initErr
+// Read file text.
+func readFile(file string) ([]string, error) {
+	fileContens := []string{}
+	f, FErr := os.Open(file)
+	if FErr != nil {
+		return nil, FErr
 	}
-	result := make([][]byte, 0, (srcBLen + dstBLen + 1))
-	// result = append(result, []byte("@@@ S: src, D: dst. @@@")) // Output head.
-	graph := initGraph()
-	for _, pl := range graph {
-		for _, p := range pl {
-			go p.getBestPath()
+	ScannerF := bufio.NewScanner(f)
+	ScannerF.Split(bufio.ScanLines)
+	for ScannerF.Scan() {
+		fileContens = append(fileContens, ScannerF.Text())
+	}
+	return fileContens, nil
+}
+
+// Output difference of files.
+func Diff(src string, dst string) ([]string, error) {
+	var fileErr error
+	srcFile, fileErr = readFile(src)
+	if fileErr != nil {
+		return nil, fileErr
+	}
+	dstFile, fileErr = readFile(dst)
+	if fileErr != nil {
+		return nil, fileErr
+	}
+	srcLen = len(srcFile)
+	dstLen = len(dstFile)
+	pTmp := newpoint(-1, -1)
+	getPath(pTmp)
+	// for k, v := range path {      **
+	// 	fmt.Printf("%v\t%v\n", k, v) ** FOR DEBUG
+	// }                             **
+	pathPoint := getMostDepth(pTmp)
+	// fmt.Println(pathPoint)        ** FOR DEBUG
+
+	// output
+	result := []string{}
+	var str string
+	pOne := newpoint(0, 0)
+	getResult := func(pOne, pPoint *point) {
+		for j := pOne.x; j < pPoint.x; j++ {
+			str = fmt.Sprintf("- %s", srcFile[j])
+			result = append(result, str)
+		}
+		for j := pOne.y; j < pPoint.y; j++ {
+			str = fmt.Sprintf("+ %s", dstFile[j])
+			result = append(result, str)
 		}
 	}
-	pList := make([]*point, 0, (srcBLen + dstBLen + 1))
-	var travelPoint func(p *point)
-	travelPoint = func(p *point) {
-		pList = append(pList, p)
-		if p.bestChild == nil {
-			return
-		} else {
-			travelPoint(p.bestChild)
-		}
+	for i := len(pathPoint) - 2; i >= 0; i-- {
+		getResult(pOne, pathPoint[i])
+		str = fmt.Sprintf("  %s", srcFile[pathPoint[i].x])
+		result = append(result, str)
+		pOne = newpoint(pathPoint[i].x+1, pathPoint[i].y+1)
 	}
-	if _, ok := <-graph[0][0].ready; !ok {
-		travelPoint(graph[0][0])
-	}
-	growResult := func(sr string, i int, byteList [][]byte) {
-		s := fmt.Sprintf("%s %d ", sr, i+1)
-		b := []byte(s)
-		for _, bt := range byteList[i] {
-			b = append(b, bt)
-		}
-		result = append(result, b)
-	}
-	tmp := pList[0]
-	for _, p := range pList[1:] {
-		dx := p.x - tmp.x
-		dy := p.y - tmp.y
-		if dy == 0 {
-			growResult("- ", tmp.x, srcBytes)
-			tmp = p
-			continue
-		}
-		if dx == 0 {
-			growResult("+ ", tmp.y, dstBytes)
-			tmp = p
-			continue
-		}
-		growResult("  ", tmp.y, dstBytes)
-		tmp = p
-	}
+	pEnd := newpoint(srcLen, dstLen)
+	getResult(pOne, pEnd)
 	return result, nil
 }
