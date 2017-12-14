@@ -1,3 +1,5 @@
+// This is just for a sample.
+
 package main
 
 import (
@@ -6,7 +8,7 @@ import (
 )
 
 func main() {
-	result, _ := diff.Diff("testFile/SrcFile5", "testFile/DstFile5")
+	result, _ := diff.Diff("testFile/SrcFile", "testFile/DstFile")
 	for _, v := range result {
 		fmt.Println(v)
 	}
