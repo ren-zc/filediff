@@ -4,7 +4,7 @@
 //       import "github.com/jacenr/filediff/diff"
 //       result, _ := diff.Diff("file1", "file2")
 
-package diff
+package diffV2
 
 import (
 	"bufio"
@@ -22,10 +22,8 @@ var newed = map[string]*point{}
 
 // src:x, dst: y
 type point struct {
-	x      int
-	y      int
-	parent *point
-	depth  int
+	x int
+	y int
 }
 
 func (p *point) String() string {
@@ -36,31 +34,23 @@ func newpoint(x int, y int) *point {
 	p := new(point)
 	p.x = x
 	p.y = y
-	p.parent = nil
-	p.depth = 0
 	return p
 }
 
 // Check the point whether has been created.
-func checkNew(x, y int, p *point) *point {
+func checkNew(x, y int) *point {
 	xyStr := strconv.Itoa(x) + strconv.Itoa(y)
 	v, ok := newed[xyStr]
 	if !ok {
-		pNew := newpoint(x, y)
-		pNew.parent = p
-		pNew.depth = p.depth + 1
-		newed[xyStr] = pNew
-		return pNew
+		p := newpoint(x, y)
+		newed[xyStr] = p
+		return p
 	} else {
-		if v.depth < p.depth+1 {
-			v.parent = p
-			v.depth = p.depth + 1
-			return v
-		} else {
-			return nil
-		}
+		return v
 	}
 }
+
+// var n int = 1
 
 // Get all shortcut paths of a point.
 func scanPath(p *point) []*point {
@@ -69,29 +59,23 @@ func scanPath(p *point) []*point {
 	ylimit := dstLen
 	for x0, y0 := p.x+1, p.y+1; x0 < xlimit && y0 < ylimit; x0, y0 = x0+1, y0+1 {
 		if srcFile[x0] == dstFile[y0] {
-			pn := checkNew(x0, y0, p)
-			if pn != nil {
-				shortPath = append(shortPath, pn)
-			}
+			pn := checkNew(x0, y0)
+			shortPath = append(shortPath, pn)
 			return shortPath
 		}
 		for i := x0 + 1; i < xlimit; i++ {
 			if srcFile[i] == dstFile[y0] {
 				xlimit = i
-				pi := checkNew(i, y0, p)
-				if pi != nil {
-					shortPath = append(shortPath, pi)
-				}
+				pi := checkNew(i, y0)
+				shortPath = append(shortPath, pi)
 				break
 			}
 		}
 		for j := y0 + 1; j < ylimit; j++ {
 			if srcFile[x0] == dstFile[j] {
 				ylimit = j
-				pj := checkNew(x0, j, p)
-				if pj != nil {
-					shortPath = append(shortPath, pj)
-				}
+				pj := checkNew(x0, j)
+				shortPath = append(shortPath, pj)
 				break
 			}
 		}
@@ -109,33 +93,35 @@ func getPath(p *point) {
 		return
 	}
 	path[p] = ps
+	// fmt.Printf("%v\t%v\n", p, ps)
 	for _, pn := range ps {
 		getPath(pn)
 	}
 }
 
 // Get the best path.
-func getMostDepth() []*point {
-	dp := 0
-	var p *point
-	for _, v := range newed {
-		if v.depth > dp {
-			dp = v.depth
-			p = v
+func getMostDepth(p *point) []*point {
+	// n++
+	// fmt.Println(n)
+	// fmt.Println(p)
+	children, ok := path[p]
+	if !ok {
+		pl := []*point{}
+		pl = append(pl, p)
+		return pl
+	}
+	depth := 0
+	var pl []*point
+	for _, v := range children {
+		plv := getMostDepth(v)
+		if length := len(plv); length > depth {
+			depth = length
+			pl = plv
 		}
 	}
-	var getParent func(pt *point)
-	pList := []*point{}
-	getParent = func(pt *point) {
-		pList = append(pList, pt)
-		if pt.depth == 0 {
-			return
-		}
-		pt = pt.parent
-		getParent(pt)
-	}
-	getParent(p)
-	return pList
+	pl = append(pl, p)
+	// fmt.Println(pl)
+	return pl
 }
 
 // Read file text.
@@ -171,8 +157,8 @@ func Diff(src string, dst string) ([]string, error) {
 	// for k, v := range path { // ** FOR CHECK **
 	// 	fmt.Printf("%v\t%v\n", k, v)
 	// }
-	pathPoint := getMostDepth()
-	// fmt.Println(pathPoint) // ** FOR CHECK **
+	pathPoint := getMostDepth(pTmp)
+	fmt.Println(pathPoint) // ** FOR CHECK **
 
 	// output
 	result := []string{}
