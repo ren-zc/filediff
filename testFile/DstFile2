@@ -1,23 +1,572 @@
-This is line 1 in srcFile.
-This is line 2 in srcFile.
-This is line 3 in srcFile. changed.
-This is line 4 in srcFile.
-This is line 5 in srcFile.
-This is line 6 in srcFile. changed.
-This is line 8 in srcFile.
-This is line 9 in srcFile.
-This is new added line in dstfile.
-This is line 10 in srcFile.
-This is line 11 in srcFile.
-The 12 line be deleted in srcFile.
-This is line 13 in srcFile.
-This is line 14 in srcFile.
-This is line 15 in srcFile. changed.
-This is line 16 in srcFile.
-This is line 17 in srcFile.
-THIS IS SECOND NEW ADDED LINE.
-This is line 18 in srcFile.
-This is line 19 in srcFile.
-This is new added line in desfile.
-This is line 20 in srcFile.
-This is line 21 in srcFile.
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end
+
+Header
+
+paragraph 1
+	p1 line1
+	p1 line2
+	p1 line3
+	p1 line4
+p1 end
+
+//paragraph 2
+//	{
+//		p2 line1
+//		p2 line2
+//		p2 line3
+//	}
+
+paragraph 3
+	p3 line1
+	p3 line2
+	p3 line3
+	p3 line4
+p3 end
+
+paragraph 4
+	{
+		p4 line1
+		p4 line2
+		p4 line3
+	}
+
+#paragraph 5
+#	p5 line1
+#	p5 line2
+#	p5 line3
+#p5 end
+
+
+paragraph 5
+	p5 line1 line1
+	p5 line2 line2
+	p5 line3 line3
+p5 end
+
+paragraph 6
+	{
+		p6 line1
+		p6 line2
+		p6 line3
+	}
+
+paragraph 7
+	p7 line1
+	p7 line2
+	p7 line3
+p7 end
+
+paragraph 8
+	{
+		p8 line1
+		p8 line2
+		p8 line3
+	}
+
+// Comments.
+paragraph 9
+	p9 line1
+	p9 line2
+	p9 line3
+p9 end
+
+file end

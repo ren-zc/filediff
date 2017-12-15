@@ -3,13 +3,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/jacenr/filediff/diff"
+	"github.com/jacenr/filediff/diffV1"
 )
 
 func main() {
-	var srcFile = "testFile/SrcFile"
-	var dstFile = "testFile/DstFile"
-	result, diffErr := diff.Diff(dstFile, srcFile)
+	var srcFile = "testFile/SrcFile2"
+	var dstFile = "testFile/DstFile2"
+	result, diffErr := diffV1.Diff(srcFile, dstFile)
 	if diffErr != nil {
 		fmt.Println(diffErr)
 	}
