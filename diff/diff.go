@@ -51,15 +51,13 @@ func checkNew(x, y int, p *point) *point {
 		pNew.depth = p.depth + 1
 		newed[xyStr] = pNew
 		return pNew
-	} else {
-		if v.depth < p.depth+1 {
-			v.parent = p
-			v.depth = p.depth + 1
-			return v
-		} else {
-			return nil
-		}
 	}
+	if v.depth < p.depth+1 {
+		v.parent = p
+		v.depth = p.depth + 1
+		return v
+	}
+	return nil
 }
 
 // Get all shortcut paths of a point.
@@ -124,6 +122,7 @@ func getMostDepth() []*point {
 			p = v
 		}
 	}
+	// fmt.Println(p)
 	var getParent func(pt *point)
 	pList := []*point{}
 	getParent = func(pt *point) {
@@ -174,24 +173,23 @@ func Diff(src string, dst string) ([]string, error) {
 	pathPoint := getMostDepth()
 	// fmt.Println(pathPoint) // ** FOR CHECK **
 
-	// output
 	result := []string{}
 	var str string
 	pOne := newpoint(0, 0)
 	getResult := func(pOne, pPoint *point) {
 		for j := pOne.x; j < pPoint.x; j++ {
-			str = fmt.Sprintf("-   %s", srcFile[j])
+			str = fmt.Sprintf("(%4d,    ) - %s", j+1, srcFile[j])
 			result = append(result, str)
 		}
 		for j := pOne.y; j < pPoint.y; j++ {
-			str = fmt.Sprintf("+   %s", dstFile[j])
+			str = fmt.Sprintf("(    ,%4d) + %s", j+1, dstFile[j])
 			result = append(result, str)
 		}
 	}
 	for i := len(pathPoint) - 2; i >= 0; i-- {
 		getResult(pOne, pathPoint[i])
 		// dstFile[pathPoint[i].y] == srcFile[pathPoint[i].x]
-		str = fmt.Sprintf("  %d %s", pathPoint[i].y+1, srcFile[pathPoint[i].x])
+		str = fmt.Sprintf("(%4d,%4d)   %s", pathPoint[i].x+1, pathPoint[i].y+1, srcFile[pathPoint[i].x])
 		result = append(result, str)
 		pOne = newpoint(pathPoint[i].x+1, pathPoint[i].y+1)
 	}

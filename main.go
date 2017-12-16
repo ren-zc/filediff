@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	result, _ := diff.Diff("testFile/SrcFile1", "testFile/DstFile1")
+	result, _ := diff.Diff("testFile/SrcFile0", "testFile/DstFile0")
 	for _, v := range result {
 		fmt.Println(v)
 	}

@@ -1,3 +1,35 @@
 # filediff
-My golang file diff utility for your study.
-"diffV1" just for study, don't use it.
+My golang file diff utility for your study.\n
+"diffV1" just for study, don't use it, as well as "diffV2".
+
+       A     B     C     A     B     B     A
+
+    o-----o-----o-----o-----o-----o-----o-----o   0
+    |     |     | \   |     |     |     |     |
+C   |     |     |  \  |     |     |     |     |
+    |     |     |   \ |     |     |     |     |
+    o-----o-----o-----o-----o-----o-----o-----o   1
+    |     | \   |     |     | \   | \   |     |
+B   |     |  \  |     |     |  \  |  \  |     |
+    |     |   \ |     |     |   \ |   \ |     |
+    o-----o-----o-----o-----o-----o-----o-----o   2
+    | \   |     |     | \   |     |     | \   |
+A   |  \  |     |     |  \  |     |     |  \  |
+    |   \ |     |     |   \ |     |     |   \ |
+    o-----o-----o-----o-----o-----o-----o-----o   3
+    |     | \   |     |     | \   | \   |     |
+B   |     |  \  |     |     |  \  |  \  |     |
+    |     |   \ |     |     |   \ |   \ |     |
+    o-----o-----o-----o-----o-----o-----o-----o   4
+    | \   |     |     | \   |     |     | \   |
+A   |  \  |     |     |  \  |     |     |  \  |
+    |   \ |     |     |   \ |     |     |   \ |
+    o-----o-----o-----o-----o-----o-----o-----o   5
+    |     |     | \   |     |     |     |     |
+C   |     |     |  \  |     |     |     |     |
+    |     |     |   \ |     |     |     |     |
+    o-----o-----o-----o-----o-----o-----o-----o   6
+
+    0     1     2     3     4     5     6     7
+
+https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
