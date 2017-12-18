@@ -1,36 +1,35 @@
 # filediff
-My golang file diff utility for your study.
 
-"diffV1" just for study, don't use it, as well as "diffV2".
+一个用于比对文本文件差异的程序，使用golang实现。
+输出形式如下：
+```    
+    (   1,   1)   Header
+    (   2,   2)   
+    (   3,   3)   paragraph 1
+    (   4,   4)     p1 line1
+    (   5,   5)     p1 line2
+    (   6,   6)     p1 line3
+    (    ,   7) +   p1 line4
+    (   7,   8)   p1 end
+    (   8,   9)   
+    (   9,    ) - paragraph 2
+    (  10,    ) -   {
+    (  11,    ) -       p2 line1
+    (  12,    ) -       p2 line2
+    (  13,    ) -       p2 line3
+    (  14,    ) -   }
+    (    ,  10) + //paragraph 2
+    (    ,  11) + //    {
+    (    ,  12) + //        p2 line1
+    (    ,  13) + //        p2 line2
+```
 
-       A     B     C     A     B     B     A
+##filediff的实现过程：
+假设有两个文本文件：
+src: ABCABBA
+dst: CBABAC
 
-    o-----o-----o-----o-----o-----o-----o-----o   0
-    |     |     | \   |     |     |     |     |
-C   |     |     |  \  |     |     |     |     |
-    |     |     |   \ |     |     |     |     |
-    o-----o-----o-----o-----o-----o-----o-----o   1
-    |     | \   |     |     | \   | \   |     |
-B   |     |  \  |     |     |  \  |  \  |     |
-    |     |   \ |     |     |   \ |   \ |     |
-    o-----o-----o-----o-----o-----o-----o-----o   2
-    | \   |     |     | \   |     |     | \   |
-A   |  \  |     |     |  \  |     |     |  \  |
-    |   \ |     |     |   \ |     |     |   \ |
-    o-----o-----o-----o-----o-----o-----o-----o   3
-    |     | \   |     |     | \   | \   |     |
-B   |     |  \  |     |     |  \  |  \  |     |
-    |     |   \ |     |     |   \ |   \ |     |
-    o-----o-----o-----o-----o-----o-----o-----o   4
-    | \   |     |     | \   |     |     | \   |
-A   |  \  |     |     |  \  |     |     |  \  |
-    |   \ |     |     |   \ |     |     |   \ |
-    o-----o-----o-----o-----o-----o-----o-----o   5
-    |     |     | \   |     |     |     |     |
-C   |     |     |  \  |     |     |     |     |
-    |     |     |   \ |     |     |     |     |
-    o-----o-----o-----o-----o-----o-----o-----o   6
 
-    0     1     2     3     4     5     6     7
 
-https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
+
+参考：https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
