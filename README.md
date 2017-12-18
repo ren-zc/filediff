@@ -70,7 +70,7 @@ cpu及内存占用率就越高，当文件行超过1000行的时候，cup及内�
 因为对于斜边[(-1,-1),(0,0)]每查找到一条斜边，其查找范围便发生了变化：
 ![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/4.png)  
 根据这样一个查找过程，依次递归，直到最末节点。  
-为了方便实现，我们使用斜边左上的顶点代表斜边。  
+在代码中为了方便实现，我们使用斜边左上的顶点代表斜边。比如(-1,-1)表示斜边[(-1,-1),(0,0)]  
 此实现方法基本解决了查找最短路径的问题。实现代码是diffV2。  
 
 diffV2补充：  
@@ -102,5 +102,13 @@ func checkNew(x, y int, p *point) *point {
 }
 ```
 
+调用方法：  
+    // 导入diff包  
+    import "github.com/jacenr/filediff/diff"  
+    // 调用diff包的Diff函数，传入src和dst文件名作为参数  
+    result, _ := diff.Diff("testFile/SrcFile0", "testFile/DstFile0")  
+
+最后的输出：  
+![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/5.png)  
 
 其他参考：https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
