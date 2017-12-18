@@ -32,7 +32,7 @@ dst: CBABAC
 如何实现从src到dst的修改过程？  
 答案就是找出src与dst之间的最大相同序列。  
 
-为了方便src与dst之间的比较，我们将其表示成如下形式的图表：
+为了方便src与dst之间的比较，我们将其表示成如下形式的图表：  
 ![chart1](https://github.com/jacenr/filediff/blob/master/Screenshots/0.png)
 
 
