@@ -24,7 +24,7 @@
     (    ,  13) + //        p2 line2
 ```
 
-##filediff的实现过程：  
+## filediff的实现过程：  
 假设有两个文本文件：  
 src: ABCABBA  
 dst: CBABAC
