@@ -33,7 +33,7 @@ dst: CBABAC
 答案就是找出src与dst之间的最大相同序列。  
 
 为了方便src与dst之间的比较，我们将其表示成如下形式的图表：
-![chart1](https://github.com/jacenr/filediff/blob/master/image/0.png)
+![chart1](https://github.com/jacenr/filediff/blob/master/Screenshots/0.png)
 
 
 参考：https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
