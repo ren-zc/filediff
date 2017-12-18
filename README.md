@@ -1,6 +1,6 @@
 # filediff
 
-一个用于比对文本文件差异的程序，使用golang实现。
+一个用于比对文本文件差异的程序，使用golang实现。  
 输出形式如下：
 ```    
     (   1,   1)   Header
@@ -24,12 +24,18 @@
     (    ,  13) + //        p2 line2
 ```
 
-##filediff的实现过程：
-假设有两个文本文件：
-src: ABCABBA
+##filediff的实现过程：  
+假设有两个文本文件：  
+src: ABCABBA  
 dst: CBABAC
 
+如何实现从src到dst的修改过程？  
+答案就是找出src与dst之间的最大相同序列。  
 
+为了方便src与dst之间的比较，我们将其表示成如下形式的图表：
+![chart1](https://github.com/jacenr/filediff/blob/master/image/0.png)
 
 
 参考：https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
+
+
