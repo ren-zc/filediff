@@ -32,7 +32,7 @@ dst: CBABAC
 如何实现从src到dst的修改过程？  
 有很多实现过程，我们的目标是找出src与dst之间的最大相同行的集合。  
 
-为了方便src与dst之间的比较，我们将其表示成如下形式的图表：
+为了方便src与dst之间的比较，我们将其表示成如下形式的图表：  
 ![chart1](https://github.com/jacenr/filediff/blob/master/Screenshots/0.png)  
 图中向右移动一格表示从src中"-"去一行，向下移动一格表示在dst中"+"上一行，  
 斜线表示src和dst中的内容相同，不做改变。  
@@ -55,9 +55,9 @@ cpu及内存占用率就越高，当文件行超过1000行的时候，cup及内�
 ![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/1.png)  
 而且因为每个节点的路径方向均为向右、向下、斜向下，我们可以按层查找：  
 ![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/2.png)  
-图示为斜边[(-1,-1),(0,0)]的两个查找层次。
+图示为斜边[(-1,-1),(0,0)]的两个查找层次。  
 对于每一个层，我们分3个方向查找，斜下，右，下，在每个方向上我们只需要保留遇到的  
-第一条斜边，因为同一个方向上其他斜边能够延伸到的节点，第一条斜边也可以延伸到。
+第一条斜边，因为同一个方向上其他斜边能够延伸到的节点，第一条斜边也可以延伸到。  
 当斜下找到一条斜边时即终止此层的查找，当斜下没有斜边时，  
 再**分别**向右，向下查找，直到找到一条斜边或者到达边界  
 （但不包含边界），终止此方向的查找，当向下和向右都查找完成时，  
@@ -68,19 +68,19 @@ cpu及内存占用率就越高，当文件行超过1000行的时候，cup及内�
 ![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/3.png)  
 为什么第二层的边界会被修改？  
 因为对于斜边[(-1,-1),(0,0)]每查找到一条斜边，其查找范围便发生了变化：
-![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/4.png)
+![chart2](https://github.com/jacenr/filediff/blob/master/Screenshots/4.png)  
 根据这样一个查找过程，依次递归，直到最末节点。  
 为了方便实现，我们使用斜边左上的顶点代表斜边。  
 此实现方法基本解决了查找最短路径的问题。实现代码是diffV2。  
 
-diffV2补充：
-diffV2有一个缺点：
+diffV2补充：  
+diffV2有一个缺点：  
 为了节省内存，point定义的过于简单，我们需要使用递归的方法才能把完整路径描绘出来，  
-这会导致在某些情况下cpu运算时间过长。
+这会导致在某些情况下cpu运算时间过长。  
 最终的diff版本对其进行了改进，牺牲少量的内存，换取cpu时间，在point中增加了  
 parent和depth字段，在输出最后的完整路径时无须递归，通过节点的parent字段便可以  
-输出完整的路径。
-depth字段是为了防止重复创建point而设置的：
+输出完整的路径。  
+depth字段是为了防止重复创建point而设置的：  
 ```go
 func checkNew(x, y int, p *point) *point {
     xyStr := strconv.Itoa(x) + strconv.Itoa(y)
