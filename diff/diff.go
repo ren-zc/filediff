@@ -141,6 +141,7 @@ func getMostDepth() []*point {
 func readFile(file string) ([]string, error) {
 	fileContens := []string{}
 	f, FErr := os.Open(file)
+	defer f.Close()
 	if FErr != nil {
 		return nil, FErr
 	}
