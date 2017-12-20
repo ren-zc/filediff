@@ -44,17 +44,20 @@ func CreateRandFile(t *testing.T) (string, string, int) {
 	for dstRandLen < 500 {
 		dstRandLen = rand.Intn(1000)
 	}
-	theSame := []string{}
+	// theSame := []string{}
+	theSame := make([]string, 0, theSameRandLen)
 	SameStr := "The Same "
 	for i := 0; i < theSameRandLen; i++ {
 		theSame = append(theSame, SameStr+string(rand.Intn(95)+33)+"\n")
 	}
-	srcOnly := []string{}
+	// srcOnly := []string{}
+	srcOnly := make([]string, 0, srcRandLen)
 	srcStr := "The Only Src "
 	for i := 0; i < srcRandLen; i++ {
 		srcOnly = append(srcOnly, srcStr+string(rand.Intn(95)+33)+"\n")
 	}
-	dstOnly := []string{}
+	// dstOnly := []string{}
+	dstOnly := make([]string, 0, dstRandLen)
 	dstStr := "The Only Dst "
 	for i := 0; i < dstRandLen; i++ {
 		dstOnly = append(dstOnly, dstStr+string(rand.Intn(95)+33)+"\n")
@@ -69,7 +72,8 @@ func CreateRandFile(t *testing.T) (string, string, int) {
 		// log.Fatalln(srcErr)
 		t.Fatal(srcErr)
 	}
-	theSameDst := []string{}
+	// theSameDst := []string{}
+	theSameDst := make([]string, 0, theSameRandLen)
 	for srcOnly != nil || theSame != nil {
 		if rand.Intn(2) == 0 && srcOnly != nil {
 			src.WriteString(srcOnly[0])
@@ -123,7 +127,7 @@ func CreateRandFile(t *testing.T) (string, string, int) {
 func TestDiff2(t *testing.T) {
 	src, dst, length := CreateRandFile(t)
 	rlength, DiffErr := Diff2(src, dst)
-	if rlength != length+1 || DiffErr != nil { // 加"1"是因为rlength多个最末的换行符。
+	if rlength != length+1 || DiffErr != nil { // 加"1"是因为求取rlength的slice多一个元素(-1,-1)。
 		t.Error("False")
 	}
 	var rmErr error
