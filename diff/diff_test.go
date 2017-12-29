@@ -10,7 +10,7 @@ import (
 )
 
 // Diff的精简形式返回最大相同行数，仅用于测试。
-func Diff2(src string, dst string) (int, error) {
+func diff2(src string, dst string) (int, error) {
 	var fileErr error
 	srcFile, fileErr = readFile(src)
 	if fileErr != nil {
@@ -126,7 +126,7 @@ func CreateRandFile(t *testing.T) (string, string, int) {
 
 func TestDiff2(t *testing.T) {
 	src, dst, length := CreateRandFile(t)
-	rlength, DiffErr := Diff2(src, dst)
+	rlength, DiffErr := diff2(src, dst)
 	if rlength != length+1 || DiffErr != nil { // 加"1"是因为求取rlength的slice多一个元素(-1,-1)。
 		t.Error("False")
 	}
