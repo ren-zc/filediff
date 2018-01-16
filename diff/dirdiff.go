@@ -17,7 +17,9 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	getPath(pTmp)
 	pathPoint := getMostDepth()
 
+	// rm: src newer than dst or created files.
 	rm := []string{}
+	// add: files that need update in dst or has been deleted in src.
 	add := []string{}
 	pOne := newpoint(0, 0)
 	getResult := func(pOne, pPoint *point) {
