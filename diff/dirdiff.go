@@ -13,6 +13,10 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	srcLen = len(srcFile)
 	dstLen = len(dstFile)
 
+	if dstLen == 0 {
+		return src, dst
+	}
+
 	pTmp := newpoint(-1, -1)
 	getPath(pTmp)
 	pathPoint := getMostDepth()
