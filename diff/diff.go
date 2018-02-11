@@ -114,6 +114,7 @@ func getPath(p *point) {
 
 // Get the best path.
 func getMostDepth() []*point {
+	pList := []*point{}
 	dp := 0
 	var p *point
 	for _, v := range newed {
@@ -123,8 +124,10 @@ func getMostDepth() []*point {
 		}
 	}
 	// fmt.Println(p)
+	if p == nil {
+		return pList
+	}
 	var getParent func(pt *point)
-	pList := []*point{}
 	getParent = func(pt *point) {
 		pList = append(pList, pt)
 		if pt.depth == 0 {
