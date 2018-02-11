@@ -12,6 +12,8 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	dstFile = dst
 	srcLen = len(srcFile)
 	dstLen = len(dstFile)
+	path = map[*point][]*point{}
+	newed = map[string]*point{}
 
 	if dstLen == 0 {
 		return src, dst
