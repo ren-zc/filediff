@@ -1,8 +1,8 @@
 package diff
 
-import (
-	"fmt"
-)
+// import (
+// 	"fmt"
+// )
 
 // DiffOnly used for directions diff of gosync, not means to file diff.
 // src: file names and file md5 sums of remote host;
@@ -42,9 +42,6 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	}
 	pEnd := newpoint(srcLen, dstLen)
 	getResult(pOne, pEnd)
-
-	fmt.Println(rm)
-	fmt.Println(add)
 
 	return rm, add
 }
