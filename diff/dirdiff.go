@@ -13,9 +13,6 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	srcLen = len(srcFile)
 	dstLen = len(dstFile)
 
-	fmt.Println(srcFile)
-	fmt.Println(dstFile)
-
 	if dstLen == 0 {
 		return src, dst
 	}
@@ -43,5 +40,9 @@ func DiffOnly(src []string, dst []string) ([]string, []string) {
 	}
 	pEnd := newpoint(srcLen, dstLen)
 	getResult(pOne, pEnd)
+
+	fmt.Println(rm)
+	fmt.Println(add)
+
 	return rm, add
 }
