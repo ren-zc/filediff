@@ -1,9 +1,5 @@
 package diff
 
-// import (
-// 	"fmt"
-// )
-
 // DiffOnly used for directions diff of gosync, not means to file diff.
 // src: file names and file md5 sums of remote host;
 // dst: file names and file md5 sums of local host.
